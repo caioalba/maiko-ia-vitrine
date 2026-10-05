@@ -121,7 +121,7 @@ flowchart TD
 
 ---
 
-## 6. Limitações Conhecidas
+## 5. Limitações Conhecidas
 
 - **Velocidade de Processamento em CPU**: A inferência de modelos de 4B parâmetros em CPU é lenta. A latência depende da consulta, do modelo e do hardware.
 - **Risco de Alucinação Factual**: Modelos quantizados pequenos podem inventar dados numéricos ou distorcer fatos mesmo citando `[Fonte N]`. A validação implementada assegura integridade sintática das fontes, mas não atesta veracidade factual absoluta.
@@ -134,7 +134,7 @@ flowchart TD
 
 ---
 
-## 7. Desenvolvimento Assistido por Múltiplas IAs
+## 6. Desenvolvimento Assistido por Múltiplas IAs
 
 O desenvolvimento do projeto foi orquestrado paralelamente entre múltiplos modelos de IA, utilizando o Claude Code como coordenador e integrador principal de código.
 Seguindo regras próprias de coordenação, cada tarefa recebeu escopo estrito com a política de "um único escritor por arquivo", combinando Codex, DeepSeek, Antigravity e Gemini em análises e revisões cruzadas *read-only*.
@@ -142,7 +142,7 @@ Esse fluxo permitiu manter rastreabilidade rigorosa de alterações, testes auto
 
 ---
 
-## 8. Roadmap
+## 7. Roadmap
 
 - [ ] **Pós-Verificação Semântica de Citações**: Motor de checagem determinística pós-geração para validar se o texto gerado possui correspondência direta com o trecho citado.
 - [ ] **Reranking e Chunking Híbrido**: Aprimoramento da recuperação na metabusca e no módulo de RAG sobre arquivos locais.

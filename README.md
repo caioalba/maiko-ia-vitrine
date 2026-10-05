@@ -11,7 +11,7 @@ O projeto prioriza a engenharia de software aplicada à IA: observabilidade pont
 
 ### Para quem é
 - **Engenharia e Pesquisa de IA**: profissionais que buscam estudar a viabilidade prática, gargalos e trade-offs de Small Language Models (SLMs) e modelos de difusão executados puramente em CPU.
-- **Avaliadores e Recrutadores Técnicos**: uma demonstração transparente de engenharia de sistemas de IA — abordando concorrência, contenção de recursos, sanitização determinística contra alucinações e isolamento de segurança.
+- **Avaliadores e Recrutadores Técnicos**: uma demonstração transparente de engenharia de sistemas de IA : abordando concorrência, contenção de recursos, sanitização determinística contra alucinações e isolamento de segurança.
 - **Privacidade e Soberania de Dados**: usuários que necessitam de um assistente inteligente e funcional em rede fechada ou privada (via loopback ou VPN Tailscale), com custo zero de tokens e sem dependência de serviços externos.
 
 ---
@@ -37,23 +37,17 @@ A interface (Cockpit) é uma Single Page Application responsiva desenvolvida em 
 
 ---
 
-## 2. O que já funciona e Resultados Medidos
+## 2. O que já funciona e resultados medidos
 
-Todas as métricas técnicas do projeto são extraídas de execuções reais e armazenadas no ledger versionado um ledger de medições mantido no repositório privado. As medições de referência foram obtidas em um ambiente com processador Intel de 6 núcleos físicos, 16 GB de RAM e sem GPU dedicada, operando com Windows 11 e subsistema WSL2.
+O projeto reúne chat local via Ollama, pesquisa Web com SearXNG, geração e leitura local de imagens, voz pt-BR offline, acesso controlado a pastas e telemetria. As medições abaixo foram feitas no ambiente de desenvolvimento e não representam garantia em outras máquinas.
 
-| Capacidade | Implementação Técnica | Métricas Observadas e Validação |
+| Cenário | Resultado registrado | Limite da medição |
 | :--- | :--- | :--- |
-| **Chat Local** | Orquestração em C# via Ollama (`nexus-commander` / `gemma3:4b`), mantido residente (`keep_alive = -1`). | • **1,07 s** de TTFT e **1,72 s** total em prompt residente curto (amostra única).<br>• Tempo médio de resposta reduzido de **14,5 s para 7,7 s** após enxugamento de prompt de sistema (avaliação A/B, 24 inferências).<br>• Avaliação de prompt de **~33 s para ~22 s** ao alinhar threads aos núcleos físicos (`num_thread=6`). |
-| **Busca Web com SearXNG** | Instância local SearXNG no WSL2 (loopback) com fallback para DuckDuckGo; raspagem assíncrona via `trafilatura`. | • **4,7 s** de pesquisa com 5 fontes retornadas via SearXNG (amostra única).<br>• Síntese Web completa (pesquisa nova + modelo local): primeiro texto caiu de **61,0 s para 18,6 s** e total de **116,2 s para 35,7 s** (amostra única, trechos de 300 caracteres, contexto 4096 unificado).<br>• Citações: **4 válidas e 0 inválidas** registradas no ledger na rota normal; fixtures offline com 1,00 de precisão nos 5 primeiros. |
-| **Geração de Imagens (3 Modos)** | Motor `stable-diffusion.cpp` compilado para CPU, invocado como subprocesso isolado com descarregamento prévio de LLMs. | • **Modo Rápido (`sd-turbo`)**: **~65 s a 67,6 s** por imagem 512×512 (59,9 s geração, pico de 5,21 GB RAM; amostra única).<br>• **Modo Qualidade (`FLUX.2-klein-4B Q8`)**: **489 s (~8,1 min)**, pico de 6,39 GB RAM (4 passos; amostra única no CLI).<br>• **Modo Máxima (`Z-Image-Turbo Q4_K`)**: **736 s (~12,2 min)**, pico de 6,46 GB RAM (8 passos; amostra única no CLI).<br>• Formato 256×144 verificado fim a fim em **162 s**; etapa de refinamento de prompt por IA em **~20 s**. |
-| **Voz Local pt-BR** | Servidor residente em Python/WSL2 executando Kokoro-82M neural; voz padrão Alex (`pm_alex`). | • Geração de **14,4 s de áudio em ~8 s** via API real (amostra única; contra 31 s a frio).<br>• Operação 100% offline, sem envio de voz para nuvem. |
-| **Leitura de Imagem (Visão)** | Endpoint `/api/vision/describe` integrado ao `gemma3:4b` multimodal no Ollama. | • Processamento e descrição visual entre **20 s e 60 s** nesta CPU (amostra única). Suporte a anexos no compositor com miniatura imediata. |
-| **Pastas com Acesso** | Módulo de workspaces (`/api/workspaces`, `/api/uploads`, edição com diff `ai-edit`). | • Validação rigorosa de caminho canônico, allowlist de diretórios e bloqueio de symlinks/traversal.<br>• Escrita atômica com retenção de até 10 backups e lixeira local; coberto por testes unitários de segurança. |
-| **Painel de Execução** | Telemetria contínua via `LocalTelemetryLedger` (`executions.ndjson`) e visualização por etapas no Cockpit. | • Exibição transparente das etapas no navegador (pesquisa, espera do 1º delta, escrita, tempos parciais).<br>• Gravação transacional em SQLite WAL (`chat.db`, `tasks.db`) com overhead < 5 ms, sem persistir conteúdo sensível de mensagens. |
-
+| Chat local | Tempo médio de resposta de **14,5 s para 7,7 s** após ajuste do prompt. | Comparação A/B com 24 inferências. |
+| Pesquisa Web, primeiro texto | **61,0 s para 18,6 s**. | Amostra única. |
+| Pesquisa Web, resposta total | **116,2 s para 35,7 s**. | Amostra única. |
 
 ---
-
 ## 3. Arquitetura do Sistema
 
 O diagrama abaixo ilustra o fluxo de dados e os mecanismos de contenção de recursos do ecossistema Maiko:
@@ -110,7 +104,7 @@ flowchart TD
 
 1. **Inferência Primária Exclusivamente em CPU (Sem GPU)**
    - *Decisão*: Viabilizar a execução integral de SLMs (família Gemma 3 de 4B e Qwen 1.5B) e difusão em processadores comuns de computadores corporativos ou pessoais. Provedores de nuvem (DeepSeek) são opcionais e desligados por padrão.
-   - *Trade-off*: Soberania absoluta e custo zero de execução, ao custo de vazão modesta (7 a 15 tokens/s em geração) e latência perceptível no primeiro token (TTFT).
+   - *Trade-off*: Soberania absoluta e custo zero de execução, ao custo de vazão modesta em geração e latência perceptível no primeiro token (TTFT).
 
 2. **Uma Inferência por Vez (`chatGate = SemaphoreSlim(1, 1)`)**
    - *Decisão*: O backend adota bloqueio rígido de concorrência local. Qualquer requisição concorrente a `/api/chat/stream` é imediatamente rejeitada com código HTTP 429. Durante a geração de imagens, o chat de texto é pausado e os modelos do Ollama são descarregados da memória RAM.
@@ -129,9 +123,9 @@ flowchart TD
 
 ## 6. Limitações Conhecidas
 
-- **Velocidade de Processamento em CPU**: A inferência de modelos de 4B parâmetros em CPU é lenta. O primeiro trecho de uma síntese Web com busca real pode levar de 18 a 35 segundos, e a resposta completa em torno de 35 a 55 segundos.
+- **Velocidade de Processamento em CPU**: A inferência de modelos de 4B parâmetros em CPU é lenta. A latência depende da consulta, do modelo e do hardware.
 - **Risco de Alucinação Factual**: Modelos quantizados pequenos podem inventar dados numéricos ou distorcer fatos mesmo citando `[Fonte N]`. A validação implementada assegura integridade sintática das fontes, mas não atesta veracidade factual absoluta.
-- **Geração de Imagens Demorada**: Em hardware baseado puramente em CPU, modelos de alta qualidade como FLUX.2 klein e Z-Image-Turbo levam entre 8 e 12 minutos por imagem de 512×512 px. Além disso, renderização de tipografia ou texto legível dentro de imagens apresenta artefatos.
+- **Geração de Imagens Demorada**: Em hardware baseado puramente em CPU, modelos de alta qualidade como FLUX.2 klein e Z-Image-Turbo podem exigir vários minutos por imagem. Além disso, renderização de tipografia ou texto legível dentro de imagens apresenta artefatos.
 - **Ambiente de Medição Específico**: Os números apresentados refletem o comportamento de uma máquina específica (Intel i5-8500T, 16 GB RAM); máquinas com especificações distintas apresentarão latências diferentes.
 - **Licenças de Modelos**:
   - `sd-turbo`: Artefato sob licença de pesquisa da Stability AI (uso comercial requer licença específica da detentora).
@@ -159,5 +153,7 @@ Esse fluxo permitiu manter rastreabilidade rigorosa de alterações, testes auto
 
 
 ---
+
+Portfólio: [maiko-ia.com.br](https://maiko-ia.com.br)
 
 Autor: [Caio Alba de Camargo](https://github.com/caioalba)

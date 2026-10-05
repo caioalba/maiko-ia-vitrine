@@ -1,3 +1,5 @@
+<p align="center"><img src="maiko-logo.png" alt="Logo da Maiko IA" width="140"></p>
+
 # Maiko IA
 
 > **Repositório vitrine.** Este repositório contém apenas a apresentação do projeto (README e capturas de tela). O código-fonte da Maiko IA é privado. Autor: Caio Alba de Camargo.

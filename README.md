@@ -1,11 +1,11 @@
-<p align="center"><img src="maiko-logo.png" alt="Logo da Maiko IA" width="140"></p>
+<p align="center"><img src="maiko-logo.png" alt="Logo da MaiKO IA" width="140"></p>
 
-# Maiko IA
+# MaiKO IA
 
-> **Repositório vitrine.** Este repositório contém apenas a apresentação do projeto (README e capturas de tela). O código-fonte da Maiko IA é privado. Autor: Caio Alba de Camargo.
+> **Repositório vitrine.** Este repositório contém apenas a apresentação do projeto (README e capturas de tela). O código-fonte da MaiKO IA é privado. Autor: Caio Alba de Camargo.
 
 
-A Maiko IA é um assistente pessoal *local-first* construído em C#/.NET 10 e web standards (HTML/JS puro), projetado para operar inteiramente em hardware modesto de consumo utilizando apenas CPU (sem GPU dedicada).
+A MaiKO IA é um assistente pessoal *local-first* construído em C#/.NET 10 e web standards (HTML/JS puro), projetado para operar inteiramente em hardware modesto de consumo utilizando apenas CPU (sem GPU dedicada).
 O sistema integra conversação com modelos locais via Ollama, metabusca Web com verificação sintática de citações, geração e interpretação local de imagens, síntese de voz pt-BR e manipulação segura de arquivos locais.
 O projeto prioriza a engenharia de software aplicada à IA: observabilidade ponta a ponta, orçamentos rígidos de contexto, concorrência controlada e registro empírico de latência, sem expor dados privados para a nuvem.
 
@@ -50,7 +50,7 @@ O projeto reúne chat local via Ollama, pesquisa Web com SearXNG, geração e le
 ---
 ## 3. Arquitetura do Sistema
 
-O diagrama abaixo ilustra o fluxo de dados e os mecanismos de contenção de recursos do ecossistema Maiko:
+O diagrama abaixo ilustra o fluxo de dados e os mecanismos de contenção de recursos do ecossistema MaiKO IA:
 
 ```mermaid
 flowchart TD
@@ -154,6 +154,6 @@ Esse fluxo permitiu manter rastreabilidade rigorosa de alterações, testes auto
 
 ---
 
-Portfólio: [maiko-ia.com.br](https://maiko-ia.com.br)
+Portfólio: [MaiKO-IA.com.br](https://maiko-ia.com.br)
 
 Autor: [Caio Alba de Camargo](https://github.com/caioalba)
